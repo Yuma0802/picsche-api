@@ -1,22 +1,16 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ImageAnnotatorClient } from '@google-cloud/vision';
-import { AppConfigService } from './config/config.service';
 import { OcrApplication } from './Application/ocr.application';
+import { GptApplication } from './Application/gpt.application';
 
 @Injectable()
 export class AppService {
-  private visionClient: ImageAnnotatorClient;
 
   constructor(
-    private readonly appConfigService: AppConfigService,
     @Inject(OcrApplication)
     private readonly ocrApplication: OcrApplication,
-  ) {
-    const serviceAccountKeyPath = appConfigService.serviceAccountKeyPath;
-    this.visionClient = new ImageAnnotatorClient({
-      keyFilename: serviceAccountKeyPath,
-    });
-  }
+    @Inject(GptApplication)
+    private readonly gptApplication: GptApplication
+  ) {}
 
   getHello(): string {
     return 'ABCDEFG HIJKLMN OPQRSTU VWXWZ Happy Happy I am happy. I can sing my ABC!';
@@ -26,8 +20,8 @@ export class AppService {
     try {
       const ocrResult =
         await this.ocrApplication.oneImageOcrApplication(imageData);
-      console.log(ocrResult)
-      return ocrResult;
+      const result = await this.gptApplication.extractInfo(ocrResult)
+      return result;
     } catch (e) {
       return e;
     }

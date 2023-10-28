@@ -15,6 +15,9 @@ export class AppController {
   @UseInterceptors(FileInterceptor('image'))
   async oneImage(@UploadedFile() file) {
     // ここで画像ファイルを処理するコードを実装
-    return await this.appService.oneImageService(file.buffer.toString('base64'))
+    const result = await this.appService.oneImageService(file.buffer.toString('base64'))
+    console.log(result)
+    console.log(typeof result)
+    return result
   }
 }
