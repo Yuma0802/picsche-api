@@ -16,7 +16,7 @@ class GptApplication{
         ],
       });
   
-      return response.choices[0].message;
+      return response.choices[0].message.content;
 
     }catch(e){
       return e
