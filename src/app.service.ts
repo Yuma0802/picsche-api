@@ -20,7 +20,10 @@ export class AppService {
     try {
       const ocrResult =
         await this.ocrApplication.oneImageOcrApplication(imageData);
-      const result = await this.gptApplication.extractInfo(ocrResult)
+      const gptResult = await this.gptApplication.extractInfo(ocrResult)
+      console.log(gptResult)
+      const result = JSON.parse(gptResult)
+      console.log(result)
       return result;
     } catch (e) {
       return e;
